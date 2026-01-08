@@ -1,0 +1,159 @@
+
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>System Trader Log – Checklist</title>
+<style>
+:root {
+  --bg: #0e1117;
+  --card: #161b22;
+  --text: #e6edf3;
+  --accent: #00f5ff;
+  --danger: #ff4d4d;
+  --success: #2ecc71;
+}
+body.neon {
+  --accent: #39ff14;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+.container {
+  max-width: 420px;
+  margin: auto;
+}
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,.4);
+}
+h1 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.subtitle {
+  font-size: .8rem;
+  opacity: .7;
+  margin-bottom: 12px;
+}
+.check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.check input {
+  margin-right: 10px;
+}
+.progress {
+  background: #222;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 12px;
+  margin: 12px 0;
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--danger);
+  transition: width .3s ease, background .3s ease;
+}
+.score {
+  font-size: .9rem;
+  text-align: center;
+}
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+button {
+  flex: 1;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1>System Trader Log</h1>
+    <div class="subtitle">R:R ≥ 4:1 · Regelkonformität</div>
+
+    <div id="checks">
+      <div class="check"><input type="checkbox">HTF Supply/Demand valid</div>
+      <div class="check"><input type="checkbox">Liquidity taken</div>
+      <div class="check"><input type="checkbox">Market Structure confirmed</div>
+      <div class="check"><input type="checkbox">Order Block clear</div>
+      <div class="check"><input type="checkbox">Entry on LTF (1–5m)</div>
+      <div class="check"><input type="checkbox">R:R ≥ 4:1</div>
+      <div class="check"><input type="checkbox">Risk ≤ 0.25%</div>
+      <div class="check"><input type="checkbox">No impulse / no FOMO</div>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="bar"></div>
+    </div>
+    <div class="score" id="score">Score: 0 / 8</div>
+
+    <div class="buttons">
+      <button onclick="resetChecklist()">Reset</button>
+      <button onclick="toggleTheme()">Dark / Neon</button>
+      <button onclick="exportJournal()">Export</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const checkboxes = document.querySelectorAll('#checks input');
+const bar = document.getElementById('bar');
+const scoreEl = document.getElementById('score');
+
+function update() {
+  const checked = [...checkboxes].filter(c => c.checked).length;
+  const total = checkboxes.length;
+  const percent = Math.round((checked / total) * 100);
+
+  scoreEl.textContent = `Score: ${checked} / ${total} (${percent}%)`;
+  bar.style.width = percent + '%';
+  bar.style.background = percent === 100 ? 'var(--success)' : 'var(--danger)';
+
+  localStorage.setItem('systemTraderLog', JSON.stringify([...checkboxes].map(c => c.checked)));
+}
+
+checkboxes.forEach(c => c.addEventListener('change', update));
+
+function resetChecklist() {
+  checkboxes.forEach(c => c.checked = false);
+  update();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('neon');
+}
+
+function exportJournal() {
+  const text = scoreEl.textContent + '\nSystem Trader Log – Regelkonformität';
+  navigator.clipboard.writeText(text);
+  alert('Score in die Zwischenablage kopiert – bereit für Telegram 📋');
+}
+
+(function load() {
+  const saved = JSON.parse(localStorage.getItem('systemTraderLog'));
+  if (saved) checkboxes.forEach((c,i)=>c.checked=saved[i]);
+  update();
+})();
+</script>
+</body>
+</html>
