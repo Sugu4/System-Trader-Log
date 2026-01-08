@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>System Trader Log – One Screen Checklist</title>
+<link rel="icon" type="image/png" href="assets/sysTraderLog.png">
+<title>System Trader Log - One Screen Checklist</title>
 
 <style>
 :root {
@@ -62,7 +63,7 @@ h1 {
   margin-bottom: 10px;
 }
 
-.tf {
+.tf, .Risiko {
   font-size: .75rem;
   margin-bottom: 12px;
   color: var(--muted);
@@ -133,14 +134,38 @@ button {
   font-size: .7rem;
   color: var(--muted);
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(20, 224, 255, 0.476);
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="card">
-    <h1>System Trader Log</h1>
-    <div class="subtitle">Process over Profit · R:R ≥ 4:1</div>
+    <div class="header">
+        <img src="assets/sysTraderLog.png" alt="System Trader Log Logo">
+        <h1>System Trader Log</h1>
+    </div>
+    <div class="subtitle">Process over Profit</div>
+    <div class="Risiko">Risiko: CRV ≥ 4:1 pro/Trade ≤ 0.25%</div>
     <div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
 
     <div class="section">
@@ -159,21 +184,15 @@ button {
 
     <div class="section">
       <h2>Struktur (15m / 5m)</h2>
-      <div class="check"><input type="checkbox">Displacement impulsiv</div>
+      <div class="check"><input type="checkbox">Preisverschiebung impulsiv</div>
       <div class="check"><input type="checkbox">BOS / CHoCH bestätigt</div>
-      <div class="check"><input type="checkbox">Richtung = HTF Bias</div>
+      <div class="check"><input type="checkbox">Richtung/Ziel = HTF Bias</div>
     </div>
 
     <div class="section">
       <h2>Entry (1m)</h2>
       <div class="check"><input type="checkbox">Order Block sauber</div>
       <div class="check"><input type="checkbox">Tap in OB (kein FOMO)</div>
-    </div>
-
-    <div class="section">
-      <h2>Risiko</h2>
-      <div class="check"><input type="checkbox">CRV ≥ 4:1</div>
-      <div class="check"><input type="checkbox">Risiko ≤ 0,25 %</div>
     </div>
 
     <div class="progress"><div class="progress-bar" id="bar"></div></div>
