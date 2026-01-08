@@ -1,122 +1,197 @@
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>System Trader Log – Checklist</title>
+<title>System Trader Log – One Screen Checklist</title>
+
 <style>
 :root {
   --bg: #0e1117;
   --card: #161b22;
   --text: #e6edf3;
+  --muted: #9ba3af;
   --accent: #00f5ff;
   --danger: #ff4d4d;
   --success: #2ecc71;
+  --glow: rgba(0,245,255,0.35);
 }
+
+/* NEON MODE */
 body.neon {
+  --bg: #05080d;
+  --card: #0b1220;
   --accent: #39ff14;
+  --glow: rgba(57,255,20,0.45);
 }
+
+* { box-sizing: border-box; font-family: Inter, system-ui, sans-serif; }
+
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, sans-serif;
   margin: 0;
   padding: 16px;
+  background: radial-gradient(circle at top, #121a2f, var(--bg));
+  color: var(--text);
 }
+
 .container {
   max-width: 420px;
   margin: auto;
 }
+
 .card {
   background: var(--card);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 0 20px rgba(0,0,0,.4);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 0 30px rgba(0,0,0,.5);
+  transition: box-shadow .3s ease;
 }
+
+body.neon .card {
+  box-shadow: 0 0 40px var(--glow);
+}
+
 h1 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
+  font-size: 1.3rem;
+  margin: 0 0 4px 0;
 }
+
 .subtitle {
   font-size: .8rem;
-  opacity: .7;
-  margin-bottom: 12px;
+  color: var(--accent);
+  margin-bottom: 10px;
 }
+
+.tf {
+  font-size: .75rem;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.section {
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent);
+}
+
+.section h2 {
+  font-size: .85rem;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+
 .check {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  font-size: .82rem;
+  margin-bottom: 6px;
+  color: var(--muted);
 }
-.check input {
-  margin-right: 10px;
-}
+
+.check input { margin-right: 8px; }
+
 .progress {
-  background: #222;
+  background: #1f2937;
   border-radius: 999px;
   overflow: hidden;
   height: 12px;
-  margin: 12px 0;
+  margin: 12px 0 6px;
 }
+
 .progress-bar {
   height: 100%;
   width: 0%;
   background: var(--danger);
-  transition: width .3s ease, background .3s ease;
+  transition: width .3s ease, background .3s ease, box-shadow .3s ease;
 }
+
 .score {
-  font-size: .9rem;
+  font-size: .85rem;
   text-align: center;
 }
+
 .buttons {
   display: flex;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
+
 button {
   flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
   background: transparent;
   color: var(--text);
-  border: 1px solid var(--accent);
-  border-radius: 10px;
-  padding: 8px;
+  font-size: .75rem;
   cursor: pointer;
+}
+
+.footer {
+  margin-top: 10px;
+  text-align: center;
+  font-size: .7rem;
+  color: var(--muted);
 }
 </style>
 </head>
 <body>
+
 <div class="container">
   <div class="card">
     <h1>System Trader Log</h1>
-    <div class="subtitle">R:R ≥ 4:1 · Regelkonformität</div>
+    <div class="subtitle">Process over Profit · R:R ≥ 4:1</div>
+    <div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
 
-    <div id="checks">
-      <div class="check"><input type="checkbox">HTF Supply/Demand valid</div>
-      <div class="check"><input type="checkbox">Liquidity taken</div>
-      <div class="check"><input type="checkbox">Market Structure confirmed</div>
-      <div class="check"><input type="checkbox">Order Block clear</div>
-      <div class="check"><input type="checkbox">Entry on LTF (1–5m)</div>
-      <div class="check"><input type="checkbox">R:R ≥ 4:1</div>
-      <div class="check"><input type="checkbox">Risk ≤ 0.25%</div>
-      <div class="check"><input type="checkbox">No impulse / no FOMO</div>
+    <div class="section">
+      <h2>HTF Kontext (4H / 1H)</h2>
+      <div class="check"><input type="checkbox">Market Phase klar</div>
+      <div class="check"><input type="checkbox">Frische Supply / Demand</div>
+      <div class="check"><input type="checkbox">Wyckoff-Kontext passt</div>
     </div>
 
-    <div class="progress">
-      <div class="progress-bar" id="bar"></div>
+    <div class="section">
+      <h2>Liquidität</h2>
+      <div class="check"><input type="checkbox">EQH / EQL identifiziert</div>
+      <div class="check"><input type="checkbox">Session High / Low</div>
+      <div class="check"><input type="checkbox">Liquidity Grab erfolgt</div>
     </div>
-    <div class="score" id="score">Score: 0 / 8</div>
+
+    <div class="section">
+      <h2>Struktur (15m / 5m)</h2>
+      <div class="check"><input type="checkbox">Displacement impulsiv</div>
+      <div class="check"><input type="checkbox">BOS / CHoCH bestätigt</div>
+      <div class="check"><input type="checkbox">Richtung = HTF Bias</div>
+    </div>
+
+    <div class="section">
+      <h2>Entry (1m)</h2>
+      <div class="check"><input type="checkbox">Order Block sauber</div>
+      <div class="check"><input type="checkbox">Tap in OB (kein FOMO)</div>
+    </div>
+
+    <div class="section">
+      <h2>Risiko</h2>
+      <div class="check"><input type="checkbox">CRV ≥ 4:1</div>
+      <div class="check"><input type="checkbox">Risiko ≤ 0,25 %</div>
+    </div>
+
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div class="score" id="score">Score: 0 / 0</div>
 
     <div class="buttons">
       <button onclick="resetChecklist()">Reset</button>
       <button onclick="toggleTheme()">Dark / Neon</button>
-      <button onclick="exportJournal()">Export</button>
+      <button onclick="exportJournal()">Text</button>
+      <button onclick="exportScreenshot()">📸 Screenshot</button>
     </div>
+
+    <div class="footer">Project Consistency · System > Emotion</div>
   </div>
 </div>
 
 <script>
-const checkboxes = document.querySelectorAll('#checks input');
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 const bar = document.getElementById('bar');
 const scoreEl = document.getElementById('score');
 
@@ -127,9 +202,16 @@ function update() {
 
   scoreEl.textContent = `Score: ${checked} / ${total} (${percent}%)`;
   bar.style.width = percent + '%';
-  bar.style.background = percent === 100 ? 'var(--success)' : 'var(--danger)';
 
-  localStorage.setItem('systemTraderLog', JSON.stringify([...checkboxes].map(c => c.checked)));
+  if (percent === 100) {
+    bar.style.background = 'var(--success)';
+    bar.style.boxShadow = '0 0 12px var(--success)';
+  } else {
+    bar.style.background = 'var(--danger)';
+    bar.style.boxShadow = 'none';
+  }
+
+  localStorage.setItem('systemTraderLogChecklist', JSON.stringify([...checkboxes].map(c => c.checked)));
 }
 
 checkboxes.forEach(c => c.addEventListener('change', update));
@@ -144,16 +226,31 @@ function toggleTheme() {
 }
 
 function exportJournal() {
-  const text = scoreEl.textContent + '\nSystem Trader Log – Regelkonformität';
+  const text = `System Trader Log\n${scoreEl.textContent}\nRegelkonformität`;
   navigator.clipboard.writeText(text);
-  alert('Score in die Zwischenablage kopiert – bereit für Telegram 📋');
+  alert('Score kopiert – bereit für Telegram 📋');
 }
 
 (function load() {
-  const saved = JSON.parse(localStorage.getItem('systemTraderLog'));
+  const saved = JSON.parse(localStorage.getItem('systemTraderLogChecklist'));
   if (saved) checkboxes.forEach((c,i)=>c.checked=saved[i]);
   update();
 })();
+
+
+function exportScreenshot() {
+  html2canvas(document.querySelector('.card'), {
+    backgroundColor: null,
+    scale: 2
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `SystemTraderLog_${new Date().toISOString().slice(0,10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+}
 </script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </body>
 </html>
