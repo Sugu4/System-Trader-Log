@@ -88,13 +88,13 @@ Herzstück des Projekts ist eine **moderne One-Screen Checklist**:
 
 ### Features
 
-* ✔ Live-Score (X / Y)
-* ✔ Progress-Bar mit Farbwechsel
-* ✔ Dark / Neon Mode (Analyse ↔ Execution)
-* ✔ Tages-Speicher (LocalStorage)
-* ✔ Reset-Button
-* ✔ Text-Export für Journal
-* ✔ 📸 Screenshot-Export (perfekt für Telegram)
+✔ Live-Score (X / Y)
+✔ Progress-Bar mit Farbwechsel
+✔ Dark / Neon Mode (Analyse ↔ Execution)
+✔ Tages-Speicher (LocalStorage)
+✔ Reset-Button
+✔ Text-Export für Journal
+✔ Screenshot-Export (perfekt für Telegram)
 
 > **100 % Score = Trade erlaubt**
 
