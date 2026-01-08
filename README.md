@@ -21,6 +21,9 @@ Dieses Projekt hilft dir dabei:
 > ✅ Klare Regeln  
 > ✅ Klare Struktur
 
+Live-Demo auf GitHub Pages:
+👉 https://sugu4.github.io/System-Trader-Log/
+
 ---
 
 ## Trading-Philosophie
