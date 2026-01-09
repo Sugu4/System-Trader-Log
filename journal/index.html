@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../assets/sYsTraderLogWith.svg">
+<title>System Trader Log - Journal</title>
+
+<style>
+:root{
+  --bg:#0e1117;
+  --card:#161b22;
+  --text:#e6edf3;
+  --muted:#9ba3af;
+  --accent:#00f5ff;
+  --success:#2ecc71;
+  --danger:#ff4d4d;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(20, 224, 255, 0.476);
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui;
+  margin:0;
+  padding:16px;
+}
+
+.container{
+    max-width:480px;
+    margin:auto
+}
+
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+}
+
+h1{
+    font-size:1.2rem;
+    margin-bottom:6px
+}
+
+.subtitle{
+    font-size:.8rem;
+    color:var(--accent);
+    margin-bottom:12px
+}
+
+label{
+    font-size:.75rem;
+    color:var(--muted);
+    display:block;
+    margin-top:10px
+}
+
+select, input, textarea{
+  width:100%;
+  background:#0b1220;
+  border:1px solid #1f2937;
+  color:var(--text);
+  border-radius:8px;
+  padding:6px;
+  font-size:.75rem;
+}
+
+textarea{
+    min-height:50px
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.score{
+  text-align:center;
+  font-size:.9rem;
+  margin-top:12px;
+}
+
+.buttons{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+
+button{
+  flex:1;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid var(--accent);
+  background:transparent;
+  color:var(--text);
+  font-size:.75rem;
+  cursor:pointer;
+}
+
+.footer{
+  text-align:center;
+  font-size:.7rem;
+  margin-top:10px;
+  color:var(--muted);
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="card" id="journal">
+
+<div class="header">
+    <img src="../assets/sYsTraderLogWith.svg" alt="System Trader Log Logo">
+    <h1>System Trader Log - Journal</h1>
+</div>
+
+<div class="subtitle">Objektiver Tages- & Prozess-Review</div>
+
+<label>Datum</label>
+<input type="date" id="date">
+
+<div class="row">
+  <div>
+    <label>Session</label>
+    <select id="session">
+      <option>London</option>
+      <option>New York</option>
+      <option>Asia</option>
+    </select>
+  </div>
+  <div>
+    <label>Trade #</label>
+    <input type="number" id="tradeNr" min="1">
+  </div>
+</div>
+
+<label>Mentaler Zustand</label>
+<select id="mental">
+  <option>ruhig</option>
+  <option>neutral</option>
+  <option>angespannt</option>
+</select>
+
+<label>Setup-Qualität</label>
+<select id="setup">
+  <option>A+</option>
+  <option>X</option>
+</select>
+
+<div class="row">
+  <div>
+    <label>HTF Bias</label>
+    <select id="bias">
+      <option>Bullish</option>
+      <option>Bearish</option>
+    </select>
+  </div>
+  <div>
+    <label>Liquidity</label>
+    <select id="liq">
+      <option>EQH</option>
+      <option>EQL</option>
+      <option>Session High</option>
+      <option>Session Low</option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <label>Displacement</label>
+    <select id="disp"><option>Ja</option><option>Nein</option></select>
+  </div>
+  <div>
+    <label>Order Block</label>
+    <select id="ob"><option>gültig</option><option>ungültig</option></select>
+  </div>
+</div>
+
+<label>Geplantes CRV</label>
+<input type="text" id="rr" placeholder="z. B. 4 : 1">
+
+<div class="row">
+  <div>
+    <label>Stop korrekt</label>
+    <select id="stop"><option>Ja</option><option>Nein</option></select>
+  </div>
+  <div>
+    <label>System eingehalten</label>
+    <select id="system"><option>Ja</option><option>Nein</option></select>
+  </div>
+</div>
+
+<label>Tages-Score (0 - 10)</label>
+<input type="number" id="score" min="0" max="10">
+
+<label>Regelverstöße</label>
+<textarea id="mistakes"></textarea>
+
+<label>Größte Erkenntnis</label>
+<textarea id="lesson"></textarea>
+
+<label>Fokus morgen</label>
+<textarea id="focus"></textarea>
+
+<label>Emotion beim Entry</label>
+<textarea id="emotionEntry"></textarea>
+
+<label>Emotion während Trade</label>
+<textarea id="emotionTrade"></textarea>
+
+<div class="buttons">
+  <button onclick="saveDay()">Speichern</button>
+  <button onclick="exportText()">Telegram Text</button>
+  <button onclick="exportScreenshot()">Screenshot</button>
+</div>
+
+<div class="footer">System > Profit</div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+function saveDay(){
+  const data={};
+  document.querySelectorAll("input,select,textarea")
+    .forEach(el=>data[el.id]=el.value);
+  localStorage.setItem("journal_"+data.date,JSON.stringify(data));
+  alert("Tag gespeichert ✔");
+}
+
+function exportText(){
+  const v = id => document.getElementById(id)?.value || "";
+
+  let t = `
+📘 SYSTEM TRADER LOG - JOURNAL
+━━━━━━━━━━━━━━━━━━━━
+📅 Datum: ${v("date")}
+🕒 Session: ${v("session")}
+🔢 Trade #: ${v("tradeNr")}
+
+🧠 PSYCHOLOGIE
+━━━━━━━━━━━━━
+Mentaler Zustand: ${v("mental")}
+Emotion beim Entry: ${v("emotionEntry")}
+Emotion während Trade: ${v("emotionTrade")}
+
+📊 SETUP & STRUKTUR
+━━━━━━━━━━━━━━━━━━
+Setup-Qualität: ${v("setup")}
+HTF Bias: ${v("bias")}
+Liquidity: ${v("liq")}
+Displacement: ${v("disp")}
+Order Block: ${v("ob")}
+Geplantes CRV: ${v("rr")}
+
+🛡️ RISIKO & DISZIPLIN
+━━━━━━━━━━━━━━━━━━━
+Stop korrekt gesetzt: ${v("stop")}
+System eingehalten: ${v("system")}
+Tages-Score: ${v("score")} / 10
+
+📝 REFLEXION
+━━━━━━━━━━━
+Regelverstöße: ${v("mistakes")}
+Größte Erkenntnis: ${v("lesson")}
+Fokus morgen: ${v("focus")}
+
+━━━━━━━━━━━━━━━━━━━━
+System > Profit
+`.trim();
+
+  navigator.clipboard.writeText(t);
+  alert("Strukturiertes Journal kopiert - bereit für Telegram 📋");
+}
+
+function exportScreenshot(){
+  html2canvas(document.getElementById("journal"),{scale:2})
+  .then(c=>{
+    const a=document.createElement("a");
+    a.download=`Journal_${Date.now()}.png`;
+    a.href=c.toDataURL();
+    a.click();
+  });
+}
+</script>
+</body>
+</html>
