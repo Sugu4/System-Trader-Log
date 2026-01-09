@@ -22,7 +22,7 @@ Dieses Projekt hilft dir dabei:
 > ✅ Klare Struktur
 
 Live-Demo auf GitHub Pages:  
-👉 https://sugu4.github.io/System-Trader-Log/
+👉 https://sugu4.github.io/System-Trader-Log/  
 👉 https://sugu4.github.io/System-Trader-Log/journal/
 
 ---

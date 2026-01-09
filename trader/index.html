@@ -3,68 +3,192 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" type="image/png" href="../assets/sYsTraderLogWith.svg">
+<link rel="icon" type="image/png" href="../assets/sysTraderLog.svg">
 <title>System Trader Log - One Screen Checklist</title>
 
 <style>
 :root {
-  --bg:#0e1117;--card:#161b22;--text:#e6edf3;--muted:#9ba3af;
-  --accent:#00f5ff;--danger:#ff4d4d;--success:#2ecc71;
+  --bg:#0e1117;
+  --card:#161b22;
+  --text:#e6edf3;
+  --muted:#9ba3af;
+  --accent:#00f5ff;
+  --danger:#ff4d4d;
+  --success:#2ecc71;
   --glow:rgba(0,245,255,.35)
 }
+
 body.neon {
-  --bg:#05080d;--card:#0b1220;--accent:#39ff14;
+  --bg:#05080d;
+  --card:#0b1220;
+  --accent:#39ff14;
   --glow:rgba(57,255,20,.45)
 }
-*{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+
+*{
+  box-sizing:border-box;
+  font-family:Inter,system-ui,sans-serif
+}
+
 body{
-  margin:0;padding:16px;
+  margin:0;
+  padding:16px;
   background:radial-gradient(circle at top,#121a2f,var(--bg));
   color:var(--text)
 }
-.container{max-width:420px;margin:auto}
+
+.container{
+  max-width:420px;
+  margin:auto
+}
+
 .card{
-  background:var(--card);border-radius:18px;padding:18px;
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
   box-shadow:0 0 30px rgba(0,0,0,.5)
 }
-body.neon .card{box-shadow:0 0 40px var(--glow)}
-.header{display:flex;align-items:center;justify-content:space-between}
-.header-left{display:flex;align-items:center;gap:10px}
-.header img{width:36px;height:36px;border-radius:50%}
-.settings-btn{cursor:pointer;font-size:1.2rem;color:var(--accent)}
-.subtitle{font-size:.8rem;color:var(--accent);margin-bottom:8px}
-.tf,.Risiko{font-size:.75rem;color:var(--muted);margin-bottom:6px}
-.section{margin:10px 0;padding-left:10px;border-left:2px solid var(--accent)}
-.section h2{font-size:.85rem;color:var(--accent)}
-.check{display:flex;align-items:center;font-size:.8rem;color:var(--muted)}
-.check input{margin-right:6px}
-.progress{background:#1f2937;border-radius:999px;height:12px;margin-top:10px}
-.progress-bar{height:100%;width:0%;background:var(--danger);transition:.3s}
-.score{text-align:center;font-size:.8rem;margin-top:4px}
-.buttons{display:flex;gap:6px;margin-top:10px}
-button{
-  flex:1;padding:7px;border-radius:10px;
-  background:transparent;border:1px solid var(--accent);
-  color:var(--text);font-size:.7rem;cursor:pointer
+
+body.neon .card{
+  box-shadow:0 0 40px var(--glow)
 }
-.footer{text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px}
+
+.header{display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.header img{width:36px;
+  height:36px;
+  border-radius:50%
+}
+
+.settings-btn{
+  cursor:pointer;
+  font-size:1.2rem;
+  color:var(--accent)
+}
+
+.subtitle{
+  font-size:.8rem;
+  color:var(--accent);
+  margin-bottom:8px
+}
+
+.tf,.Risiko{
+  font-size:.75rem;
+  color:var(--muted);
+  margin-bottom:6px
+}
+
+.section{
+  margin:10px 0;
+  padding-left:10px;
+  border-left:2px solid var(--accent)
+}
+
+.section h2{
+  font-size:.85rem;
+  color:var(--accent)
+}
+
+.check{
+  display:flex;
+  align-items:center;
+  font-size:.8rem;
+  color:var(--muted)
+}
+
+.check input{
+  margin-right:6px
+}
+
+.progress{
+  background:#1f2937;
+  border-radius:999px;
+  height:12px;
+  margin-top:10px
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--danger);
+  transition:.3s
+}
+
+.score{
+  text-align:center;
+  font-size:.8rem;
+  margin-top:4px
+}
+
+.buttons{
+  display:flex;
+  gap:6px;
+  margin-top:10px
+}
+
+button{
+  flex:1;
+  padding:7px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--text);
+  font-size:.7rem;
+  cursor:pointer
+}
+
+.footer{
+  text-align:center;
+  font-size:.65rem;
+  color:var(--muted);
+  margin-top:6px
+}
 
 /* SETTINGS MODAL */
 .modal{
-  position:fixed;inset:0;background:rgba(0,0,0,.6);
-  display:none;align-items:center;justify-content:center
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center
 }
+
 .modal-content{
-  background:var(--card);padding:16px;border-radius:16px;
-  max-width:380px;width:100%
+  background:var(--card);
+  padding:16px;
+  border-radius:16px;
+  max-width:380px;
+  width:100%
 }
-.modal h3{margin:0 0 8px;font-size:.9rem;color:var(--accent)}
+
+.modal h3{
+  margin:0 0 8px;
+  font-size:.9rem;
+  color:var(--accent)
+}
+
 .modal textarea{
-  width:100%;min-height:34px;margin-bottom:6px;
-  background:#0d1117;color:var(--text);
-  border:1px solid var(--accent);border-radius:8px;padding:6px;
+  width:100%;
+  min-height:34px;
+  margin-bottom:6px;
+  background:#0d1117;
+  color:var(--text);
+  border:1px solid var(--accent);
+  border-radius:8px;
+  padding:6px;
   font-size:.7rem
 }
+
 </style>
 </head>
 <body>
