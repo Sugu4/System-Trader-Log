@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Trader Log</title>
+<link rel="icon" href="assets/sysTraderLog.svg">
+
+<style>
+:root{
+  --bg:#0e1117;
+  --card:#161b22;
+  --text:#e6edf3;
+  --muted:#9ba3af;
+  --accent:#00f5ff;
+  --danger:#ff4d4d;
+  --success:#2ecc71;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui;
+  margin:0;
+  padding:16px;
+}
+.container{max-width:420px;margin:auto}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.header img{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+}
+h1{font-size:1.2rem;margin:0}
+.subtitle{color:var(--accent);font-size:.8rem;margin-bottom:8px}
+
+.settings{
+  cursor:pointer;
+  font-size:1rem;
+  color:var(--muted);
+}
+
+.section{
+  margin-bottom:14px;
+  padding-left:10px;
+  border-left:2px solid var(--accent);
+}
+.section h2{
+  font-size:.85rem;
+  color:var(--accent);
+}
+.check{
+  display:flex;
+  align-items:center;
+  font-size:.8rem;
+  margin-bottom:6px;
+  color:var(--muted);
+}
+.check input{margin-right:6px}
+.check span{
+  flex:1;
+}
+.check span[contenteditable]{
+  outline:none;
+}
+.hide-btn{
+  cursor:pointer;
+  font-size:.7rem;
+  margin-left:6px;
+  opacity:.6;
+}
+
+.hidden{
+  display:none;
+}
+
+.progress{
+  background:#1f2937;
+  height:12px;
+  border-radius:999px;
+  overflow:hidden;
+  margin:14px 0 6px;
+}
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--danger);
+  transition:.3s;
+}
+.score{text-align:center;font-size:.85rem}
+
+.buttons{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+button{
+  flex:1;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid var(--accent);
+  background:transparent;
+  color:var(--text);
+  font-size:.75rem;
+  cursor:pointer;
+}
+.footer{
+  margin-top:10px;
+  text-align:center;
+  font-size:.7rem;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="card" id="card">
+
+<div class="header">
+  <div class="header-left">
+    <img src="assets/sYsTraderLogWith.svg">
+    <h1>System Trader Log</h1>
+  </div>
+  <div class="settings" onclick="toggleEdit()">⚙️</div>
+</div>
+
+<div class="subtitle">Process over Profit</div>
+
+<div id="checklist"></div>
+
+<div class="progress">
+  <div class="progress-bar" id="bar"></div>
+</div>
+<div class="score" id="score">Score: 0%</div>
+
+<div class="buttons">
+  <button onclick="resetAll()">Reset</button>
+  <button onclick="exportText()">Text</button>
+  <button onclick="exportScreenshot()">Screenshot</button>
+</div>
+
+<div class="footer">Erst die Regeln, dann das Gold</div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+const system = [
+  { title:"HTF Kontext (4H / 1H)", items:[
+    "Market Phase klar","Supply / Demand frisch","Wyckoff Kontext passt"
+  ]},
+  { title:"Liquidität", items:[
+    "EQH / EQL identifiziert","Session High / Low","Liquidity Grab erfolgt"
+  ]},
+  { title:"Struktur (15m / 5m)", items:[
+    "Impulsiver Move","BOS / CHoCH bestätigt","HTF Bias respected"
+  ]},
+  { title:"Entry (1m)", items:[
+    "Order Block sauber","Kein FOMO Entry"
+  ]}
+];
+
+let editMode=false;
+const checklist=document.getElementById("checklist");
+
+function render(){
+  checklist.innerHTML="";
+  system.forEach((sec,si)=>{
+    const s=document.createElement("div");
+    s.className="section";
+    s.innerHTML=`<h2 contenteditable="${editMode}">${sec.title}</h2>`;
+    sec.items.forEach((it,ii)=>{
+      const d=document.createElement("div");
+      d.className="check";
+      d.dataset.active="true";
+      d.innerHTML=`
+        <input type="checkbox">
+        <span contenteditable="${editMode}">${it}</span>
+        <span class="hide-btn" onclick="toggleItem(this)">👁️</span>
+      `;
+      s.appendChild(d);
+    });
+    checklist.appendChild(s);
+  });
+  updateScore();
+}
+
+function toggleEdit(){
+  editMode=!editMode;
+  render();
+}
+
+function toggleItem(el){
+  const row=el.parentElement;
+  row.dataset.active = row.dataset.active==="true"?"false":"true";
+  row.classList.toggle("hidden");
+  updateScore();
+}
+
+function updateScore(){
+  const rows=[...document.querySelectorAll(".check")]
+    .filter(r=>r.dataset.active==="true");
+  const checks=rows.map(r=>r.querySelector("input"));
+  const checked=checks.filter(c=>c.checked).length;
+  const percent=Math.round((checked/checks.length)*100)||0;
+
+  document.getElementById("score").innerText=`Score: ${percent}%`;
+  const bar=document.getElementById("bar");
+  bar.style.width=percent+"%";
+  bar.style.background=percent===100?"var(--success)":"var(--danger)";
+}
+
+document.addEventListener("change",e=>{
+  if(e.target.type==="checkbox") updateScore();
+});
+
+function resetAll(){
+  document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+  updateScore();
+}
+
+function exportText(){
+  let t="System Trader Log\n\n";
+  document.querySelectorAll(".section").forEach(sec=>{
+    t+=`[${sec.querySelector("h2").innerText}]\n`;
+    sec.querySelectorAll(".check").forEach(c=>{
+      if(c.dataset.active==="true"){
+        t+=`- ${c.querySelector("span").innerText}\n`;
+      }
+    });
+    t+="\n";
+  });
+  t+=document.getElementById("score").innerText;
+  navigator.clipboard.writeText(t);
+  alert("Text kopiert – bereit für Telegram 📋");
+}
+
+function exportScreenshot(){
+  html2canvas(document.getElementById("card"),{backgroundColor:null,scale:2})
+  .then(c=>{
+    const a=document.createElement("a");
+    a.download=`SystemTraderLog_${Date.now()}.png`;
+    a.href=c.toDataURL();
+    a.click();
+  });
+}
+
+render();
+</script>
+</body>
+</html>

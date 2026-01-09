@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="assets/sysTraderLog.svg">
+<title>System Trader Log - One Screen Checklist</title>
+
+<style>
+:root {
+  --bg:#0e1117;--card:#161b22;--text:#e6edf3;--muted:#9ba3af;
+  --accent:#00f5ff;--danger:#ff4d4d;--success:#2ecc71;
+  --glow:rgba(0,245,255,.35)
+}
+body.neon {
+  --bg:#05080d;--card:#0b1220;--accent:#39ff14;
+  --glow:rgba(57,255,20,.45)
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+body{
+  margin:0;padding:16px;
+  background:radial-gradient(circle at top,#121a2f,var(--bg));
+  color:var(--text)
+}
+.container{max-width:420px;margin:auto}
+.card{
+  background:var(--card);border-radius:18px;padding:18px;
+  box-shadow:0 0 30px rgba(0,0,0,.5)
+}
+body.neon .card{box-shadow:0 0 40px var(--glow)}
+.header{display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:10px}
+.header img{width:36px;height:36px;border-radius:50%}
+.settings-btn{cursor:pointer;font-size:1.2rem;color:var(--accent)}
+.subtitle{font-size:.8rem;color:var(--accent);margin-bottom:8px}
+.tf,.Risiko{font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.section{margin:10px 0;padding-left:10px;border-left:2px solid var(--accent)}
+.section h2{font-size:.85rem;color:var(--accent)}
+.check{display:flex;align-items:center;font-size:.8rem;color:var(--muted)}
+.check input{margin-right:6px}
+.progress{background:#1f2937;border-radius:999px;height:12px;margin-top:10px}
+.progress-bar{height:100%;width:0%;background:var(--danger);transition:.3s}
+.score{text-align:center;font-size:.8rem;margin-top:4px}
+.buttons{display:flex;gap:6px;margin-top:10px}
+button{
+  flex:1;padding:7px;border-radius:10px;
+  background:transparent;border:1px solid var(--accent);
+  color:var(--text);font-size:.7rem;cursor:pointer
+}
+.footer{text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px}
+
+/* SETTINGS MODAL */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  display:none;align-items:center;justify-content:center
+}
+.modal-content{
+  background:var(--card);padding:16px;border-radius:16px;
+  max-width:380px;width:100%
+}
+.modal h3{margin:0 0 8px;font-size:.9rem;color:var(--accent)}
+.modal textarea{
+  width:100%;min-height:34px;margin-bottom:6px;
+  background:#0d1117;color:var(--text);
+  border:1px solid var(--accent);border-radius:8px;padding:6px;
+  font-size:.7rem
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+
+<div class="header">
+  <div class="header-left">
+    <img src="assets/sYsTraderLogWith.svg">
+    <h1 style="font-size:1.1rem;margin:0">System Trader Log</h1>
+  </div>
+  <div class="settings-btn" onclick="openSettings()">⚙️</div>
+</div>
+
+<div class="subtitle">Process over Profit</div>
+<div class="Risiko">Risiko: CRV ≥ 4R | ≤ 0.25%</div>
+<div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
+
+<div id="checklist"></div>
+
+<div class="progress"><div class="progress-bar" id="bar"></div></div>
+<div class="score" id="score"></div>
+
+<div class="buttons">
+  <button onclick="resetChecklist()">Reset</button>
+  <button onclick="toggleTheme()">Dark / Neon</button>
+  <button onclick="exportJournal()">Text</button>
+  <button onclick="exportScreenshot()">Screenshot</button>
+</div>
+
+<div class="footer">Erst die Regeln, dann das Gold</div>
+</div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal">
+  <div class="modal-content">
+    <h3>Checklist anpassen</h3>
+    <div id="settingsFields"></div>
+    <div class="buttons">
+      <button onclick="saveSettings()">Speichern</button>
+      <button onclick="resetTexts()">Standard</button>
+      <button onclick="closeSettings()">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+const defaultChecklist = [
+  {s:"HTF Kontext (4H / 1H)",t:["News & Market Phase klar","Frische Supply / Demand","Wyckoff-Kontext passt"]},
+  {s:"Liquidität",t:["EQH / EQL identifiziert","Session High / Low","Liquidity Grab erfolgt"]},
+  {s:"Struktur (15m / 5m)",t:["Preisverschiebung Impulsiv","BOS / CHoCH bestätigt","Richtung / Ziel = HTF Bias"]},
+  {s:"Entry (1m)",t:["Order Block sauber","Tap in OB - kein FOMO", "System SL & TP = OBH / OBL"]}
+];
+
+let checklist = JSON.parse(localStorage.getItem("customChecklist")) || defaultChecklist;
+const checklistDiv = document.getElementById("checklist");
+const bar=document.getElementById("bar"),score=document.getElementById("score");
+
+function render(){
+  checklistDiv.innerHTML="";
+  let total=0,checked=0;
+  checklist.forEach((sec,si)=>{
+    const s=document.createElement("div");s.className="section";
+    s.innerHTML=`<h2>${sec.s}</h2>`;
+    sec.t.forEach((txt,ti)=>{
+      total++;
+      const c=document.createElement("div");c.className="check";
+      const id=`c-${si}-${ti}`;
+      const saved=localStorage.getItem(id)==="1";
+      if(saved)checked++;
+      c.innerHTML=`<input type="checkbox" ${saved?"checked":""} 
+        onchange="toggle('${id}',this.checked)"> ${txt}`;
+      s.appendChild(c);
+    });
+    checklistDiv.appendChild(s);
+  });
+  update(total,checked);
+}
+
+function toggle(id,val){
+  localStorage.setItem(id,val?"1":"0");
+  render();
+}
+function update(total,checked){
+  const p=Math.round(checked/total*100);
+  score.textContent=`Score: ${checked} / ${total} (${p}%)`;
+  bar.style.width=p+"%";
+  bar.style.background=p===100?"var(--success)":"var(--danger)";
+}
+function resetChecklist(){
+  Object.keys(localStorage).forEach(k=>k.startsWith("c-")&&localStorage.removeItem(k));
+  render();
+}
+function toggleTheme(){document.body.classList.toggle("neon")}
+function exportJournal(){
+  navigator.clipboard.writeText(score.textContent);
+  alert("Bereit für Telegram 📋");
+}
+function exportScreenshot(){
+  html2canvas(document.querySelector(".card"),{scale:2,backgroundColor:null})
+  .then(c=>{
+    const a=document.createElement("a");
+    a.download="SystemTraderLog.png";a.href=c.toDataURL();a.click();
+  });
+}
+
+/* SETTINGS */
+function openSettings(){
+  document.getElementById("settingsModal").style.display="flex";
+  const f=document.getElementById("settingsFields");f.innerHTML="";
+  checklist.forEach((s,si)=>{
+    s.t.forEach((t,ti)=>{
+      f.innerHTML+=`<textarea data-s="${si}" data-t="${ti}">${t}</textarea>`;
+    });
+  });
+}
+function closeSettings(){document.getElementById("settingsModal").style.display="none"}
+function saveSettings(){
+  document.querySelectorAll("textarea").forEach(a=>{
+    checklist[a.dataset.s].t[a.dataset.t]=a.value;
+  });
+  localStorage.setItem("customChecklist",JSON.stringify(checklist));
+  closeSettings();render();
+}
+function resetTexts(){
+  checklist=JSON.parse(JSON.stringify(defaultChecklist));
+  localStorage.removeItem("customChecklist");
+  closeSettings();render();
+}
+
+render();
+</script>
+</body>
+</html>
