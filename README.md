@@ -23,6 +23,7 @@ Dieses Projekt hilft dir dabei:
 
 Live-Demo auf GitHub Pages:  
 👉 https://sugu4.github.io/System-Trader-Log/  
+👉 https://sugu4.github.io/System-Trader-Log/trader/ (Anpassbar Zahnrad oben rechts)  
 👉 https://sugu4.github.io/System-Trader-Log/journal/
 
 ---
