@@ -91,6 +91,7 @@ Herzstück des Projekts ist eine **moderne One-Screen Checklist**:
 ### Features
 
 ✔ Live-Score (X / Y)  
+✔ Vorbereitung vor jeder Checkliste (Minset-Checks)  
 ✔ Progress-Bar mit Farbwechsel  
 ✔ Dark / Neon Mode (Analyse ↔ Execution)  
 ✔ Tages-Speicher (LocalStorage)  
