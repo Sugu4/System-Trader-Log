@@ -153,7 +153,6 @@ button{
   margin-top:6px
 }
 
-/* SETTINGS MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -168,7 +167,9 @@ button{
   padding:16px;
   border-radius:16px;
   max-width:380px;
-  width:100%
+  width:100%;
+  max-height:80vh;
+  overflow-y:auto;
 }
 
 .modal h3{
@@ -192,39 +193,58 @@ button{
 </style>
 </head>
 <body>
-
 <div class="container">
-<div class="card">
 
-<div class="header">
-  <div class="header-left">
-    <img src="../assets/sYsTraderLogWith.svg">
-    <h1 style="font-size:1.1rem;margin:0">System Trader Log</h1>
+  <div class="card" id="prepScreen">
+    <div class="header">
+      <div class="header-left">
+        <img src="../assets/sYsTraderLogWith.svg">
+        <h1 style="font-size:1.1rem;margin:0">Vorbereitung</h1>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Mindset - Check</h2>
+      <div class="check"><input type="checkbox" class="prep">Mental ruhig & fokussiert (kein unnötiger Stress und Druck)</div>
+      <div class="check"><input type="checkbox" class="prep">Ich akzeptiere, dass Verluste Teil des Systems sind</div>
+      <div class="check"><input type="checkbox" class="prep">Tagesrisiko bekannt: max. -0,5%</div>
+      <div class="check"><input type="checkbox" class="prep">Max. 2 Trades für heute festgelegt</div>
+      <div class="check"><input type="checkbox" class="prep">Ich trade nur mein System - nichts anderes existiert</div>
+    </div>
+
+    <button id="prepBtn" onclick="enterChecklist()" disabled>Checklist starten</button>
   </div>
-  <div class="settings-btn" onclick="openSettings()">⚙️</div>
+
+  <div class="card" id="checklistScreen" style="display:none">
+
+    <div class="header">
+      <div class="header-left">
+        <img src="../assets/sYsTraderLogWith.svg">
+        <h1 style="font-size:1.1rem;margin:0">System Trader Log</h1>
+      </div>
+      <div class="settings-btn" onclick="openSettings()">⚙️</div>
+    </div>
+
+    <div class="subtitle">Process over Profit</div>
+    <div class="Risiko">Risiko: CRV ≥ 4:1 | ≤ 0.25%</div>
+    <div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
+
+    <div id="checklist"></div>
+
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div class="score" id="score"></div>
+
+    <div class="buttons">
+      <button onclick="resetChecklist()">Reset</button>
+      <button onclick="toggleTheme()">Dark / Neon</button>
+      <button onclick="exportJournal()">Text</button>
+      <button onclick="exportScreenshot()">Screenshot</button>
+    </div>
+
+    <div class="footer">Erst die Regeln, dann das Gold</div>
+  </div>
 </div>
 
-<div class="subtitle">Process over Profit</div>
-<div class="Risiko">Risiko: CRV ≥ 4:1 | ≤ 0.25%</div>
-<div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
-
-<div id="checklist"></div>
-
-<div class="progress"><div class="progress-bar" id="bar"></div></div>
-<div class="score" id="score"></div>
-
-<div class="buttons">
-  <button onclick="resetChecklist()">Reset</button>
-  <button onclick="toggleTheme()">Dark / Neon</button>
-  <button onclick="exportJournal()">Text</button>
-  <button onclick="exportScreenshot()">Screenshot</button>
-</div>
-
-<div class="footer">Erst die Regeln, dann das Gold</div>
-</div>
-</div>
-
-<!-- SETTINGS MODAL -->
 <div class="modal" id="settingsModal">
   <div class="modal-content">
     <h3>Checklist anpassen</h3>
@@ -240,7 +260,7 @@ button{
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-const defaultChecklist = [
+  const defaultChecklist = [
   {s:"HTF Kontext (4H / 1H)",t:["News & Market Phase klar","Frische Supply / Demand","Wyckoff-Kontext passt"]},
   {s:"Liquidität",t:["EQH / EQL identifiziert","Session High / Low","Liquidity Grab erfolgt"]},
   {s:"Struktur (15m / 5m)",t:["Preisverschiebung Impulsiv","BOS / CHoCH bestätigt","Richtung / Ziel = HTF Bias"]},
@@ -248,82 +268,133 @@ const defaultChecklist = [
 ];
 
 let checklist = JSON.parse(localStorage.getItem("customChecklist")) || defaultChecklist;
-const checklistDiv = document.getElementById("checklist");
-const bar=document.getElementById("bar"),score=document.getElementById("score");
+
+const checklistDiv  = document.getElementById("checklist");
+const bar           = document.getElementById("bar");
+const score         = document.getElementById("score");
+const prepScreen    = document.getElementById("prepScreen");
+const checklistScreen = document.getElementById("checklistScreen");
+const prepChecks    = document.querySelectorAll(".prep");
+const prepBtn       = document.getElementById("prepBtn");
+
+prepChecks.forEach(c => c.addEventListener("change", () => {
+  prepBtn.disabled = ![...prepChecks].every(x => x.checked);
+}));
+
+function enterChecklist() {
+  prepScreen.style.display = "none";
+  checklistScreen.style.display = "block";
+  localStorage.setItem("prepDone", "true");
+}
+
 
 function render(){
-  checklistDiv.innerHTML="";
-  let total=0,checked=0;
-  checklist.forEach((sec,si)=>{
-    const s=document.createElement("div");s.className="section";
-    s.innerHTML=`<h2>${sec.s}</h2>`;
-    sec.t.forEach((txt,ti)=>{
+  checklistDiv.innerHTML = "";
+  let total = 0, checked = 0;
+
+  checklist.forEach((sec, si) => {
+    const s = document.createElement("div");
+    s.className = "section";
+    s.innerHTML = `<h2>${sec.s}</h2>`;
+    sec.t.forEach((txt, ti) => {
       total++;
-      const c=document.createElement("div");c.className="check";
-      const id=`c-${si}-${ti}`;
-      const saved=localStorage.getItem(id)==="1";
-      if(saved)checked++;
-      c.innerHTML=`<input type="checkbox" ${saved?"checked":""} 
+      const c = document.createElement("div");
+      c.className = "check";
+      const id = `c-${si}-${ti}`;
+      const saved = localStorage.getItem(id) === "1";
+      if (saved) checked++;
+      c.innerHTML = `<input type="checkbox" ${saved ? "checked" : ""} 
         onchange="toggle('${id}',this.checked)"> ${txt}`;
       s.appendChild(c);
     });
     checklistDiv.appendChild(s);
   });
-  update(total,checked);
+
+  update(total, checked);
 }
 
-function toggle(id,val){
-  localStorage.setItem(id,val?"1":"0");
+function toggle(id, val){
+  localStorage.setItem(id, val ? "1" : "0");
   render();
 }
-function update(total,checked){
-  const p=Math.round(checked/total*100);
-  score.textContent=`Score: ${checked} / ${total} (${p}%)`;
-  bar.style.width=p+"%";
-  bar.style.background=p===100?"var(--success)":"var(--danger)";
+
+function update(total, checked){
+  const p = total ? Math.round(checked/total*100) : 0;
+  score.textContent = `Score: ${checked} / ${total} (${p}%)`;
+  bar.style.width   = p + "%";
+  bar.style.background = p === 100 ? "var(--success)" : "var(--danger)";
 }
+
+
 function resetChecklist(){
-  Object.keys(localStorage).forEach(k=>k.startsWith("c-")&&localStorage.removeItem(k));
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith("c-")) localStorage.removeItem(k);
+  });
+  localStorage.removeItem("prepDone");
+  checklistScreen.style.display = "none";
+  prepScreen.style.display      = "block";
+  prepChecks.forEach(c => c.checked = false);
+  prepBtn.disabled = true;
+
   render();
 }
-function toggleTheme(){document.body.classList.toggle("neon")}
+
+function toggleTheme(){
+  document.body.classList.toggle("neon");
+}
+
 function exportJournal(){
   navigator.clipboard.writeText(score.textContent);
   alert("Bereit für Telegram 📋");
 }
+
 function exportScreenshot(){
   html2canvas(document.querySelector(".card"),{scale:2,backgroundColor:null})
-  .then(c=>{
-    const a=document.createElement("a");
-    a.download="SystemTraderLog.png";a.href=c.toDataURL();a.click();
-  });
+    .then(c=>{
+      const a = document.createElement("a");
+      a.download = "SystemTraderLog.png";
+      a.href = c.toDataURL();
+      a.click();
+    });
 }
 
-/* SETTINGS */
+
 function openSettings(){
   document.getElementById("settingsModal").style.display="flex";
-  const f=document.getElementById("settingsFields");f.innerHTML="";
+  const f = document.getElementById("settingsFields");
+  f.innerHTML = "";
   checklist.forEach((s,si)=>{
     s.t.forEach((t,ti)=>{
-      f.innerHTML+=`<textarea data-s="${si}" data-t="${ti}">${t}</textarea>`;
+      f.innerHTML += `<textarea data-s="${si}" data-t="${ti}">${t}</textarea>`;
     });
   });
 }
-function closeSettings(){document.getElementById("settingsModal").style.display="none"}
+function closeSettings(){
+  document.getElementById("settingsModal").style.display="none";
+}
 function saveSettings(){
-  document.querySelectorAll("textarea").forEach(a=>{
-    checklist[a.dataset.s].t[a.dataset.t]=a.value;
+  document.querySelectorAll("#settingsFields textarea").forEach(a=>{
+    checklist[a.dataset.s].t[a.dataset.t] = a.value;
   });
-  localStorage.setItem("customChecklist",JSON.stringify(checklist));
-  closeSettings();render();
+  localStorage.setItem("customChecklist", JSON.stringify(checklist));
+  closeSettings();
+  render();
 }
 function resetTexts(){
-  checklist=JSON.parse(JSON.stringify(defaultChecklist));
+  checklist = JSON.parse(JSON.stringify(defaultChecklist));
   localStorage.removeItem("customChecklist");
-  closeSettings();render();
+  closeSettings();
+  render();
 }
 
-render();
+
+(function(){
+  prepScreen.style.display = "block";
+  checklistScreen.style.display = "none";
+  render();
+})();
+
 </script>
 </body>
+
 </html>

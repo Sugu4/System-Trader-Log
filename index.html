@@ -282,16 +282,13 @@ function exportScreenshot() {
     });
 }
 
-/* Auto Resume */
 (function(){
-  if(localStorage.getItem('prepDone')==='true'){
-    prepScreen.style.display='none';
-    checklistScreen.style.display='block';
-    const saved=JSON.parse(localStorage.getItem('systemTraderLogChecklist'));
-    if(saved) tradeChecks.forEach((c,i)=>c.checked=saved[i]);
-    update();
-  }
+  // immer zuerst Vorbereitung zeigen
+  prepScreen.style.display = "block";
+  checklistScreen.style.display = "none";
+  render();
 })();
+
 </script>
 
 </body>
