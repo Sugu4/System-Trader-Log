@@ -253,12 +253,21 @@ function saveDay(){
   alert("Tag gespeichert ✔");
 }
 
+const v = id => document.getElementById(id)?.value || "";
+
+const bullets = id =>
+  (document.getElementById(id)?.value || "")
+    .split("\n")
+    .filter(line => line.trim() !== "")
+    .map(line => `• ${line.trim()}`)
+    .join("\n");
+
 function exportText(){
   const v = id => document.getElementById(id)?.value || "";
 
   let t = `
-📘 SYSTEM TRADER LOG - JOURNAL
-━━━━━━━━━━━━━━━━━━━━
+SYSTEM TRADER LOG - JOURNAL
+━━━━━━━━━━━━━
 📅 Datum: ${v("date")}
 🕒 Session: ${v("session")}
 🔢 Trade #: ${v("tradeNr")}
@@ -266,11 +275,13 @@ function exportText(){
 🧠 PSYCHOLOGIE
 ━━━━━━━━━━━━━
 Mentaler Zustand: ${v("mental")}
-Emotion beim Entry: ${v("emotionEntry")}
-Emotion während Trade: ${v("emotionTrade")}
+Emotion beim Entry:
+${bullets("emotionEntry")}
+Emotion während Trade:
+${bullets("emotionTrade")}
 
 📊 SETUP & STRUKTUR
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━
 Setup-Qualität: ${v("setup")}
 HTF Bias: ${v("bias")}
 Liquidity: ${v("liq")}
@@ -279,18 +290,20 @@ Order Block: ${v("ob")}
 Geplantes CRV: ${v("rr")}
 
 🛡️ RISIKO & DISZIPLIN
-━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━
 Stop korrekt gesetzt: ${v("stop")}
 System eingehalten: ${v("system")}
 Tages-Score: ${v("score")} / 10
 
 📝 REFLEXION
-━━━━━━━━━━━
-Regelverstöße: ${v("mistakes")}
-Größte Erkenntnis: ${v("lesson")}
-Fokus morgen: ${v("focus")}
-
-━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━
+Regelverstöße:
+${bullets("mistakes")}
+Größte Erkenntnis:
+${bullets("lesson")}
+Fokus morgen:
+${bullets("focus")}
+━━━━━━━━━━━━━
 System > Profit
 `.trim();
 
