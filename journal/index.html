@@ -124,6 +124,14 @@ button{
   color:var(--muted);
 }
 
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 </style>
 </head>
 
@@ -310,6 +318,11 @@ System > Profit
   navigator.clipboard.writeText(t);
   alert("Strukturiertes Journal kopiert - bereit für Telegram 📋");
 }
+
+window.addEventListener("load", () => {
+  const dateInput = document.getElementById("date");
+  if (dateInput) dateInput.focus();
+});
 
 function exportScreenshot(){
   html2canvas(document.getElementById("journal"),{scale:2})
