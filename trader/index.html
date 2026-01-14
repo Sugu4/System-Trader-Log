@@ -193,6 +193,15 @@ button{
   font-size:.7rem
 }
 
+input[type="checkbox"]:focus-visible,
+button:focus-visible,
+.settings-btn:focus-visible,
+.modal textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
 </style>
 </head>
 <body>
@@ -287,7 +296,6 @@ prepChecks.forEach(c => c.addEventListener("change", () => {
 function enterChecklist() {
   prepScreen.style.display = "none";
   checklistScreen.style.display = "block";
-  localStorage.setItem("prepDone", "true");
 }
 
 
@@ -317,9 +325,19 @@ function render(){
 }
 
 function toggle(id, val){
+  const trades = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
+  const active = document.activeElement;
+  const currentIndex = trades.indexOf(active);
+
   localStorage.setItem(id, val ? "1" : "0");
   render();
+
+  const newTrades = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
+  if (currentIndex >= 0 && newTrades[currentIndex]) {
+    newTrades[currentIndex].focus();
+  }
 }
+
 
 function update(total, checked){
   const p = total ? Math.round(checked/total*100) : 0;
@@ -338,7 +356,7 @@ function resetChecklist(){
   prepScreen.style.display      = "block";
   prepChecks.forEach(c => c.checked = false);
   prepBtn.disabled = true;
-
+  prepBtn.focus();
   render();
 }
 
