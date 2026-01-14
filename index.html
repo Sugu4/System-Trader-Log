@@ -18,7 +18,6 @@
   --glow: rgba(0,245,255,0.35);
 }
 
-/* NEON MODE */
 body.neon {
   --bg: #05080d;
   --card: #0b1220;
@@ -35,26 +34,29 @@ body {
   color: var(--text);
 }
 
-.container {
-  max-width: 420px;
-  margin: auto;
-}
+.container { max-width: 420px; margin: auto; }
 
 .card {
   background: var(--card);
   border-radius: 18px;
   padding: 18px;
   box-shadow: 0 0 30px rgba(0,0,0,.5);
-  transition: box-shadow .3s ease;
 }
 
-body.neon .card {
-  box-shadow: 0 0 40px var(--glow);
+body.neon .card { box-shadow: 0 0 40px var(--glow); }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-h1 {
-  font-size: 1.3rem;
-  margin: 0 0 4px 0;
+.header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(20, 224, 255, 0.476);
 }
 
 .subtitle {
@@ -65,8 +67,8 @@ h1 {
 
 .tf, .Risiko {
   font-size: .75rem;
-  margin-bottom: 12px;
   color: var(--muted);
+  margin-bottom: 12px;
 }
 
 .section {
@@ -77,8 +79,8 @@ h1 {
 
 .section h2 {
   font-size: .85rem;
-  margin-bottom: 6px;
   color: var(--accent);
+  margin-bottom: 6px;
 }
 
 .check {
@@ -89,14 +91,16 @@ h1 {
   color: var(--muted);
 }
 
-.check input { margin-right: 8px; }
+.check input {
+  margin-right: 8px;
+}
 
 .progress {
   background: #1f2937;
   border-radius: 999px;
-  overflow: hidden;
   height: 12px;
-  margin: 12px 0 6px;
+  overflow: hidden;
+  margin-top: 12px;
 }
 
 .progress-bar {
@@ -107,8 +111,9 @@ h1 {
 }
 
 .score {
-  font-size: .85rem;
   text-align: center;
+  font-size: .85rem;
+  margin-top: 6px;
 }
 
 .buttons {
@@ -135,65 +140,69 @@ button {
   color: var(--muted);
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.header img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(20, 224, 255, 0.476);
-}
-
-.header h1 {
-  font-size: 1.2rem;
-  margin: 0;
-}
-
 </style>
 </head>
+
 <body>
 
 <div class="container">
-  <div class="card">
+
+  <div class="card" id="prepScreen">
     <div class="header">
-        <img src="assets/sYsTraderLogWith.svg" alt="System Trader Log Logo">
-        <h1>System Trader Log</h1>
+      <img src="assets/sYsTraderLogWith.svg">
+      <h1>Vorbereitung</h1>
     </div>
+
+    <div class="section">
+      <h2>Mindset - Check</h2>
+      <div class="check"><input type="checkbox" class="prep">Mental ruhig & fokussiert (kein unnötiger Stress und Druck)</div>
+      <div class="check"><input type="checkbox" class="prep">Ich akzeptiere, dass Verluste Teil des Systems sind</div>
+      <div class="check"><input type="checkbox" class="prep">Tagesrisiko bekannt: max. -0,5%</div>
+      <div class="check"><input type="checkbox" class="prep">Max. 2 Trades für heute festgelegt</div>
+      <div class="check"><input type="checkbox" class="prep">Ich trade nur mein System - nichts anderes existiert</div>
+    </div>
+
+    <button id="prepBtn" onclick="enterChecklist()" disabled>Checklist starten</button>
+  </div>
+
+
+  <div class="card" id="checklistScreen" style="display:none">
+
+    <div class="header">
+      <img src="assets/sYsTraderLogWith.svg">
+      <h1>System Trader Log</h1>
+    </div>
+
     <div class="subtitle">Process over Profit</div>
-    <div class="Risiko">Risiko: CRV ≥ 4:1 pro/Trade ≤ 0.25%</div>
+    <div class="Risiko">Risiko: CRV ≥ 4:1 | pro/Trade 0.25%</div>
     <div class="tf">TF-Flow: 4H → 1H → 15m → 5m → 1m</div>
 
     <div class="section">
       <h2>HTF Kontext (4H / 1H)</h2>
-      <div class="check"><input type="checkbox">News & Market Phase klar</div>
-      <div class="check"><input type="checkbox">Frische Supply / Demand</div>
-      <div class="check"><input type="checkbox">Wyckoff-Kontext passt</div>
+      <div class="check"><input type="checkbox" class="trade">News & Market Phase klar</div>
+      <div class="check"><input type="checkbox" class="trade">Supply / Demand frisch</div>
+      <div class="check"><input type="checkbox" class="trade">Wyckoff passt</div>
     </div>
 
     <div class="section">
       <h2>Liquidität</h2>
-      <div class="check"><input type="checkbox">EQH / EQL identifiziert</div>
-      <div class="check"><input type="checkbox">Session High / Low</div>
-      <div class="check"><input type="checkbox">Liquidity Grab erfolgt</div>
+      <div class="check"><input type="checkbox" class="trade">EQH / EQL identifiziert</div>
+      <div class="check"><input type="checkbox" class="trade">Session High / Low</div>
+      <div class="check"><input type="checkbox" class="trade">Liquidity Grab erfolgt</div>
     </div>
 
     <div class="section">
       <h2>Struktur (15m / 5m)</h2>
-      <div class="check"><input type="checkbox">Preisverschiebung impulsiv</div>
-      <div class="check"><input type="checkbox">BOS / CHoCH bestätigt</div>
-      <div class="check"><input type="checkbox">Richtung / Ziel = HTF Bias</div>
+      <div class="check"><input type="checkbox" class="trade">Preisverschiebung impulsiv</div>
+      <div class="check"><input type="checkbox" class="trade">BOS / CHoCH bestätigt</div>
+      <div class="check"><input type="checkbox" class="trade">Richtung / Ziel = HTF Bias</div>
     </div>
 
     <div class="section">
       <h2>Entry (1m)</h2>
-      <div class="check"><input type="checkbox">Order Block sauber</div>
-      <div class="check"><input type="checkbox">Tap in OB (kein FOMO)</div>
-      <div class="check"><input type="checkbox">System SL & TP = OBH / OBL</div>
+      <div class="check"><input type="checkbox" class="trade">Order Block valide</div>
+      <div class="check"><input type="checkbox" class="trade">Tap in OB (kein FOMO)</div>
+      <div class="check"><input type="checkbox" class="trade">System SL & TP = OBH / OBL</div>
     </div>
 
     <div class="progress"><div class="progress-bar" id="bar"></div></div>
@@ -210,34 +219,47 @@ button {
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const tradeChecks = document.querySelectorAll('.trade');
+const prepChecks = document.querySelectorAll('.prep');
 const bar = document.getElementById('bar');
 const scoreEl = document.getElementById('score');
+const prepBtn = document.getElementById('prepBtn');
+const prepScreen = document.getElementById('prepScreen');
+const checklistScreen = document.getElementById('checklistScreen');
 
 function update() {
-  const checked = [...checkboxes].filter(c => c.checked).length;
-  const total = checkboxes.length;
+  const checked = [...tradeChecks].filter(c => c.checked).length;
+  const total = tradeChecks.length;
   const percent = Math.round((checked / total) * 100);
 
-  scoreEl.textContent = `Score: ${checked} / ${total} (${percent}%)`;
+  scoreEl.textContent = `Score: ${checked} / ${total}`;
   bar.style.width = percent + '%';
+  bar.style.background = percent === 100 ? 'var(--success)' : 'var(--danger)';
 
-  if (percent === 100) {
-    bar.style.background = 'var(--success)';
-    bar.style.boxShadow = '0 0 12px var(--success)';
-  } else {
-    bar.style.background = 'var(--danger)';
-    bar.style.boxShadow = 'none';
-  }
-
-  localStorage.setItem('systemTraderLogChecklist', JSON.stringify([...checkboxes].map(c => c.checked)));
+  localStorage.setItem('systemTraderLogChecklist',
+    JSON.stringify([...tradeChecks].map(c => c.checked)));
 }
 
-checkboxes.forEach(c => c.addEventListener('change', update));
+tradeChecks.forEach(c => c.addEventListener('change', update));
+
+prepChecks.forEach(c => c.addEventListener('change', () => {
+  prepBtn.disabled = ![...prepChecks].every(c => c.checked);
+}));
+
+function enterChecklist() {
+  prepScreen.style.display = 'none';
+  checklistScreen.style.display = 'block';
+  localStorage.setItem('prepDone','true');
+}
 
 function resetChecklist() {
-  checkboxes.forEach(c => c.checked = false);
+  document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+  localStorage.clear();
+  checklistScreen.style.display = 'none';
+  prepScreen.style.display = 'block';
   update();
 }
 
@@ -246,31 +268,31 @@ function toggleTheme() {
 }
 
 function exportJournal() {
-  const text = `System Trader Log\n${scoreEl.textContent}\nRegelkonformität`;
-  navigator.clipboard.writeText(text);
-  alert('Score kopiert – bereit für Telegram 📋');
+  navigator.clipboard.writeText(`System Trader Log\n${scoreEl.textContent}`);
+  alert('Bereit für Telegram 📋');
 }
-
-(function load() {
-  const saved = JSON.parse(localStorage.getItem('systemTraderLogChecklist'));
-  if (saved) checkboxes.forEach((c,i)=>c.checked=saved[i]);
-  update();
-})();
-
 
 function exportScreenshot() {
-  html2canvas(document.querySelector('.card'), {
-    backgroundColor: null,
-    scale: 2
-  }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = `SystemTraderLog_${new Date().toISOString().slice(0,10)}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  });
+  html2canvas(checklistScreen,{scale:2,backgroundColor:null})
+    .then(c=>{
+      const a=document.createElement('a');
+      a.download=`SystemTraderLog_${new Date().toISOString().slice(0,10)}.png`;
+      a.href=c.toDataURL();
+      a.click();
+    });
 }
+
+/* Auto Resume */
+(function(){
+  if(localStorage.getItem('prepDone')==='true'){
+    prepScreen.style.display='none';
+    checklistScreen.style.display='block';
+    const saved=JSON.parse(localStorage.getItem('systemTraderLogChecklist'));
+    if(saved) tradeChecks.forEach((c,i)=>c.checked=saved[i]);
+    update();
+  }
+})();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 </body>
 </html>
