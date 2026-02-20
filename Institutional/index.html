@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../assets/sysTraderLog.svg">
+    <title>Institutional Trading Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #111827;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .brand {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand img {
+            width: 72px;
+            height: 72px;
+            border-radius: 999px;
+            border: 2px solid #22c55e;
+            object-fit: cover;
+        }
+
+        .brand span {
+            font-size: 0.85em;
+            color: #9ca3af;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 10px;
+            font-size: 1.8em;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9em;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        .tab-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 5px 20px 0;
+            background: #374151;
+            color: #f1f5f9;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #000;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #1f2937;
+            border-radius: 12px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .section strong {
+            display: block;
+            margin-bottom: 15px;
+            color: #22c55e;
+            font-size: 1.1em;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.3);
+            margin-right: 12px;
+            accent-color: #22c55e;
+        }
+
+        input[type="radio"] {
+            transform: scale(1.2);
+            margin-right: 8px;
+            accent-color: #22c55e;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            background: #374151;
+            color: #e2e8f0;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .export {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #000;
+        }
+
+        .reset {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .reset:hover {
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: #1e40af;
+            color: #bfdbfe;
+            font-weight: 600;
+        }
+
+        .journal-section {
+            margin: 15px 0;
+            padding: 15px;
+            background: #374151;
+            border-radius: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px 16px 20px;
+            }
+
+            .tab-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .brand {
+                position: static;
+                margin-bottom: 0 auto 10px auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Icon oben links, klickbar -->
+        <a href="https://sugu4.github.io/guemues/" class="brand" target="_blank" rel="noopener noreferrer">
+            <img src="../assets/sysTraderLog.svg" alt="Brand Icon">
+        </a>
+
+        <h1>🏛 Institutional Trading Tool</h1>
+        <div class="subtitle">Prozess > Profit • CRV 4:1+ • Schnelles Journal</div>
+
+        <button class="tab-btn active" onclick="switchTab('pre', event)">📋 Pre-Trade Checklist</button>
+        <button class="tab-btn" onclick="switchTab('journal', event)">📒 Post-Trade Journal</button>
+
+        <div id="pre" class="tab active">
+            <div class="section">
+                <strong>🌍 Markt-Kontext</strong>
+                <label><input type="checkbox" data-key="news"> News geprüft (High Impact)</label>
+                <label><input type="checkbox" data-key="htf"> HTF Trend (bull/bear/range) klar</label>
+                <label><input type="checkbox" data-key="session"> Session passend (London/NY)</label>
+                <label><input type="checkbox" data-key="structure"> Marktstruktur (BOS/CHoCH) bestätigt</label>
+            </div>
+            <div class="section">
+                <strong>📍 Setup-Qualität</strong>
+                <label><input type="checkbox" data-key="zone"> Zone (OB/FVG) sauber markiert</label>
+                <label><input type="checkbox" data-key="liq"> Liquidität gesweept/verstanden</label>
+                <label><input type="checkbox" data-key="entry"> Entry bestätigt (Candle/Volumen)</label>
+            </div>
+            <div class="section">
+                <strong>⚙️ Risiko & Ausführung</strong>
+                <label><input type="checkbox" data-key="rr"> CRV ≥4:1</label>
+                <label><input type="checkbox" data-key="risk"> Risk/Trade ≤0.5%, Daily ≤0.75%</label>
+                <label><input type="checkbox" data-key="sl"> SL technisch (unter Zone)</label>
+                <label><input type="checkbox" data-key="maxtrades"> Max Trades heute nicht überschritten</label>
+            </div>
+            <div class="section">
+                <strong>🧠 Mentale Kontrolle</strong>
+                <label><input type="checkbox" data-key="fomo"> Kein FOMO / Emotional neutral</label>
+                <label><input type="checkbox" data-key="system"> Passt zu meinem System</label>
+                <label><input type="checkbox" data-key="focus"> Mentale Bereitschaft: Fokus hoch</label>
+            </div>
+        </div>
+
+        <div id="journal" class="tab">
+            <div class="section">
+                <strong>📝 Schnelle Trade-Details</strong>
+                <input type="text" id="symbol" placeholder="Symbol (z.B. EURUSD)" maxlength="10">
+                <input type="text" id="entry" placeholder="Entry-Preis">
+                <input type="number" id="risk_pct" step="0.01" placeholder="Risk %">
+                <input type="number" id="rr_ratio" step="0.1" placeholder="R:R">
+                <input type="text" id="outcome" placeholder="Outcome (Win/Loss/BE)">
+            </div>
+            <div class="journal-section">
+                <strong>⚠️ Regelverstoß? (Klick & Go)</strong>
+                <label><input type="radio" name="violation" value="none"> Kein Verstoß</label>
+                <label><input type="radio" name="violation" value="htf"> HTF ignoriert</label>
+                <label><input type="radio" name="violation" value="risk"> Risk zu hoch</label>
+                <label><input type="radio" name="violation" value="fomo"> FOMO/Emotion</label>
+                <label><input type="radio" name="violation" value="other"> Anderes (unten beschreiben)</label>
+            </div>
+            <div class="journal-section">
+                <strong>✅ Was lief gut?</strong>
+                <label><input type="checkbox" class="good"> Setup-Qualität top</label>
+                <label><input type="checkbox" class="good"> Risikomanagement perfekt</label>
+                <label><input type="checkbox" class="good"> Mentale Kontrolle stark</label>
+            </div>
+            <div class="journal-section">
+                <strong>❌ Was verbessern?</strong>
+                <label><input type="checkbox" class="improve"> Entry-Timing</label>
+                <label><input type="checkbox" class="improve"> SL-Placement</label>
+                <label><input type="checkbox" class="improve"> News-Check</label>
+            </div>
+            <div class="section">
+                <strong>📈 Lesson (1 Satz)</strong>
+                <textarea id="lesson" placeholder="z.B. 'Nächstes Mal HTF enger prüfen.' (max 140 Zeichen)"
+                    maxlength="140"></textarea>
+            </div>
+        </div>
+
+        <button class="btn export" onclick="exportAll()">📤 Export für Telegram/Journal</button>
+        <button class="btn reset" onclick="resetAll()">🔄 Reset Tool</button>
+        <div id="status" class="status" style="display:none;">✔ Journal gespeichert – Next!</div>
+
+        <div class="footer">Disziplin zuerst | Quick Journal [Feb 2026]</div>
+    </div>
+
+    <script>
+        function switchTab(tabName, evt) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            if (evt) evt.target.classList.add('active');
+        }
+
+        function saveData() {
+            const data = {
+                checklist: Array.from(document.querySelectorAll('#pre input[type="checkbox"]')).map(cb => ({ checked: cb.checked, key: cb.dataset.key })),
+                symbol: document.getElementById('symbol').value,
+                entry: document.getElementById('entry').value,
+                risk_pct: document.getElementById('risk_pct').value,
+                rr_ratio: document.getElementById('rr_ratio').value,
+                outcome: document.getElementById('outcome').value,
+                violation: document.querySelector('input[name="violation"]:checked')?.value || 'none',
+                good: Array.from(document.querySelectorAll('.good:checked')).map(el => el.parentElement.innerText.trim()),
+                improve: Array.from(document.querySelectorAll('.improve:checked')).map(el => el.parentElement.innerText.trim()),
+                lesson: document.getElementById('lesson').value
+            };
+            localStorage.setItem('tradingTool', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('tradingTool') || '{}');
+            data.checklist?.forEach(item => {
+                const cb = document.querySelector(`[data-key="${item.key}"]`);
+                if (cb) cb.checked = item.checked;
+            });
+            document.getElementById('symbol').value = data.symbol || '';
+            document.getElementById('entry').value = data.entry || '';
+            document.getElementById('risk_pct').value = data.risk_pct || '';
+            document.getElementById('rr_ratio').value = data.rr_ratio || '';
+            document.getElementById('outcome').value = data.outcome || '';
+            if (data.violation) {
+                const v = document.querySelector(`input[name="violation"][value="${data.violation}"]`);
+                if (v) v.checked = true;
+            }
+            document.getElementById('lesson').value = data.lesson || '';
+            if (data.good) {
+                document.querySelectorAll('.good').forEach(cb => {
+                    cb.checked = data.good.includes(cb.parentElement.innerText.trim());
+                });
+            }
+            if (data.improve) {
+                document.querySelectorAll('.improve').forEach(cb => {
+                    cb.checked = data.improve.includes(cb.parentElement.innerText.trim());
+                });
+            }
+        }
+
+        function exportAll() {
+            saveData();
+            let text = "🏛 Institutional Trade Report\n\n";
+            const checks = document.querySelectorAll('#pre input[type="checkbox"]');
+            let completed = 0, total = checks.length;
+            checks.forEach(cb => {
+                text += (cb.checked ? "✅ " : "❌ ") + cb.parentElement.innerText.trim() + "\n";
+                if (cb.checked) completed++;
+            });
+            text += `\n📊 Pre-Completion: ${Math.round((completed / total) * 100)}%\n\n`;
+
+            text += `💱 Symbol: ${document.getElementById('symbol').value || 'n/a'}\n`;
+            text += `📈 Entry: ${document.getElementById('entry').value || 'n/a'}\n`;
+            text += `⚠️ Risk: ${document.getElementById('risk_pct').value || 'n/a'}%\n`;
+            text += `🎯 R:R: ${document.getElementById('rr_ratio').value || 'n/a'}\n`;
+            text += `🏁 Outcome: ${document.getElementById('outcome').value || 'Open'}\n\n`;
+
+            const violation = document.querySelector('input[name="violation"]:checked');
+            text += `🚨 Regelverstoß: ${violation ? violation.nextSibling.textContent.trim() : 'Keiner'}\n\n`;
+
+            const goods = Array.from(document.querySelectorAll('.good:checked')).map(g => g.parentElement.innerText.trim());
+            if (goods.length) text += `✅ Gut: ${goods.join(', ')}\n`;
+            const improves = Array.from(document.querySelectorAll('.improve:checked')).map(i => i.parentElement.innerText.trim());
+            if (improves.length) text += `❌ Verbessern: ${improves.join(', ')}\n`;
+
+            text += `\n📈 Lesson: ${document.getElementById('lesson').value || 'Noch offen'}\n\nDisziplin > Emotionen`;
+
+            navigator.clipboard.writeText(text);
+            document.getElementById('status').style.display = 'block';
+            setTimeout(() => document.getElementById('status').style.display = 'none', 3000);
+        }
+
+        function resetAll() {
+            if (confirm('Reset alles? (inkl. Journal)')) {
+                document.querySelectorAll('input[type="checkbox"], input[type="radio"], textarea, input[type="text"], input[type="number"]').forEach(el => {
+                    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+                    else el.value = '';
+                });
+                localStorage.removeItem('tradingTool');
+            }
+        }
+
+        document.addEventListener('change', saveData);
+        document.addEventListener('input', saveData);
+        loadData();
+    </script>
+</body>
+
+</html>
