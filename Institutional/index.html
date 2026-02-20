@@ -225,35 +225,35 @@
             <img src="../assets/sysTraderLog.svg" alt="Brand Icon">
         </a>
 
-        <h1>🏛 Institutional Trading Tool</h1>
-        <div class="subtitle">Prozess > Profit • CRV 4:1+ • Schnelles Journal</div>
+        <h1>Institutional Trading Tool</h1>
+        <div class="subtitle">Prozess > Profit • CRV 4:1 • Journal</div>
 
-        <button class="tab-btn active" onclick="switchTab('pre', event)">📋 Pre-Trade Checklist</button>
-        <button class="tab-btn" onclick="switchTab('journal', event)">📒 Post-Trade Journal</button>
+        <button class="tab-btn active" onclick="switchTab('pre', event)">Trade Checklist</button>
+        <button class="tab-btn" onclick="switchTab('journal', event)">Trade Journal</button>
 
         <div id="pre" class="tab active">
             <div class="section">
-                <strong>🌍 Markt-Kontext</strong>
+                <strong>Markt-Kontext</strong>
                 <label><input type="checkbox" data-key="news"> News geprüft (High Impact)</label>
                 <label><input type="checkbox" data-key="htf"> HTF Trend (bull/bear/range) klar</label>
                 <label><input type="checkbox" data-key="session"> Session passend (London/NY)</label>
                 <label><input type="checkbox" data-key="structure"> Marktstruktur (BOS/CHoCH) bestätigt</label>
             </div>
             <div class="section">
-                <strong>📍 Setup-Qualität</strong>
+                <strong>Setup-Qualität</strong>
                 <label><input type="checkbox" data-key="zone"> Zone (OB/FVG) sauber markiert</label>
                 <label><input type="checkbox" data-key="liq"> Liquidität gesweept/verstanden</label>
                 <label><input type="checkbox" data-key="entry"> Entry bestätigt (Candle/Volumen)</label>
             </div>
             <div class="section">
-                <strong>⚙️ Risiko & Ausführung</strong>
+                <strong>Risiko & Ausführung</strong>
                 <label><input type="checkbox" data-key="rr"> CRV ≥4:1</label>
                 <label><input type="checkbox" data-key="risk"> Risk/Trade ≤0.5%, Daily ≤0.75%</label>
                 <label><input type="checkbox" data-key="sl"> SL technisch (unter Zone)</label>
                 <label><input type="checkbox" data-key="maxtrades"> Max Trades heute nicht überschritten</label>
             </div>
             <div class="section">
-                <strong>🧠 Mentale Kontrolle</strong>
+                <strong>Mentale Kontrolle</strong>
                 <label><input type="checkbox" data-key="fomo"> Kein FOMO / Emotional neutral</label>
                 <label><input type="checkbox" data-key="system"> Passt zu meinem System</label>
                 <label><input type="checkbox" data-key="focus"> Mentale Bereitschaft: Fokus hoch</label>
@@ -262,12 +262,12 @@
 
         <div id="journal" class="tab">
             <div class="section">
-                <strong>📝 Schnelle Trade-Details</strong>
-                <input type="text" id="symbol" placeholder="Symbol (z.B. EURUSD)" maxlength="10">
+                <strong>Schnelle Trade-Details</strong>
+                <input type="text" id="symbol" placeholder="Symbol (z.B. XAUUSD)" maxlength="10">
                 <input type="text" id="entry" placeholder="Entry-Preis">
                 <input type="number" id="risk_pct" step="0.01" placeholder="Risk %">
-                <input type="number" id="rr_ratio" step="0.1" placeholder="R:R">
-                <input type="text" id="outcome" placeholder="Outcome (Win/Loss/BE)">
+                <input type="number" id="rr_ratio" step="0.1" placeholder="CRV (z.B. 4.0)">
+                <input type="text" id="outcome" placeholder="Outcome (TP/SL/BE)">
             </div>
             <div class="journal-section">
                 <strong>⚠️ Regelverstoß? (Klick & Go)</strong>
@@ -290,17 +290,17 @@
                 <label><input type="checkbox" class="improve"> News-Check</label>
             </div>
             <div class="section">
-                <strong>📈 Lesson (1 Satz)</strong>
-                <textarea id="lesson" placeholder="z.B. 'Nächstes Mal HTF enger prüfen.' (max 140 Zeichen)"
-                    maxlength="140"></textarea>
+                <strong>Erkenntnis (1 Satz)</strong>
+                <textarea id="lesson" placeholder="z.B. 'Nächstes Mal HTF und LQ enger prüfen.' (max 250 Zeichen)"
+                    maxlength="250"></textarea>
             </div>
         </div>
 
-        <button class="btn export" onclick="exportAll()">📤 Export für Telegram/Journal</button>
+        <button class="btn export" onclick="exportAll()">📤 Export für Telegram</button>
         <button class="btn reset" onclick="resetAll()">🔄 Reset Tool</button>
-        <div id="status" class="status" style="display:none;">✔ Journal gespeichert – Next!</div>
+        <div id="status" class="status" style="display:none;">✔ Journal gespeichert</div>
 
-        <div class="footer">Disziplin zuerst | Quick Journal [Feb 2026]</div>
+        <div class="footer">Disziplin zuerst | Quick Journal | © Süleyman Gümüs</div>
     </div>
 
     <script>
@@ -369,7 +369,7 @@
             text += `💱 Symbol: ${document.getElementById('symbol').value || 'n/a'}\n`;
             text += `📈 Entry: ${document.getElementById('entry').value || 'n/a'}\n`;
             text += `⚠️ Risk: ${document.getElementById('risk_pct').value || 'n/a'}%\n`;
-            text += `🎯 R:R: ${document.getElementById('rr_ratio').value || 'n/a'}\n`;
+            text += `🎯 CRV: ${document.getElementById('rr_ratio').value || 'n/a'}\n`;
             text += `🏁 Outcome: ${document.getElementById('outcome').value || 'Open'}\n\n`;
 
             const violation = document.querySelector('input[name="violation"]:checked');
@@ -380,7 +380,7 @@
             const improves = Array.from(document.querySelectorAll('.improve:checked')).map(i => i.parentElement.innerText.trim());
             if (improves.length) text += `❌ Verbessern: ${improves.join(', ')}\n`;
 
-            text += `\n📈 Lesson: ${document.getElementById('lesson').value || 'Noch offen'}\n\nDisziplin > Emotionen`;
+            text += `\n📈 Erkenntnis: ${document.getElementById('lesson').value || 'Noch offen'}\n\nDisziplin > Emotionen`;
 
             navigator.clipboard.writeText(text);
             document.getElementById('status').style.display = 'block';
