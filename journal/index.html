@@ -141,7 +141,7 @@ button:focus-visible {
 
 <div class="header">
     <img src="../assets/sYsTraderLogWith.svg" alt="System Trader Log Logo">
-    <h1>System Trader Log - Journal</h1>
+    <h1>System Trader Log • Journal</h1>
 </div>
 
 <div class="subtitle">Objektiver Tages- & Prozess-Review</div>
@@ -274,13 +274,13 @@ function exportText(){
   const v = id => document.getElementById(id)?.value || "";
 
   let t = `
-SYSTEM TRADER LOG - JOURNAL
+SYSTEM TRADER LOG • JOURNAL
 ━━━━━━━━━━━━━
-📅 Datum: ${v("date")}
-🕒 Session: ${v("session")}
-🔢 Trade #: ${v("tradeNr")}
+Datum: ${v("date")}
+Session: ${v("session")}
+Trade #: ${v("tradeNr")}
 
-🧠 PSYCHOLOGIE
+PSYCHOLOGIE
 ━━━━━━━━━━━━━
 Mentaler Zustand: ${v("mental")}
 Emotion beim Entry:
@@ -288,7 +288,7 @@ ${bullets("emotionEntry")}
 Emotion während Trade:
 ${bullets("emotionTrade")}
 
-📊 SETUP & STRUKTUR
+SETUP & STRUKTUR
 ━━━━━━━━━━━━━
 Setup-Qualität: ${v("setup")}
 HTF Bias: ${v("bias")}
@@ -297,13 +297,13 @@ Displacement: ${v("disp")}
 Order Block: ${v("ob")}
 Geplantes CRV: ${v("rr")}
 
-🛡️ RISIKO & DISZIPLIN
+RISIKO & DISZIPLIN
 ━━━━━━━━━━━━━
 Stopp korrekt gesetzt: ${v("stop")}
 System eingehalten: ${v("system")}
 Tages-Score: ${v("score")} / 10
 
-📝 REFLEXION
+REFLEXION
 ━━━━━━━━━━━━━
 Regelverstöße:
 ${bullets("mistakes")}
@@ -316,7 +316,7 @@ System > Profit
 `.trim();
 
   navigator.clipboard.writeText(t);
-  alert("Strukturiertes Journal kopiert - bereit für Telegram 📋");
+  alert("Strukturiertes Journal kopiert, bereit für Telegram");
 }
 
 window.addEventListener("load", () => {
